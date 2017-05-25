@@ -1,5 +1,4 @@
-#define DEPTH_SIZE 8
-#define DEPTHS 8
+#define DRAWS 256
 
 enum {
     DRAW_NULL,
@@ -18,8 +17,7 @@ typedef struct {
 } Drawn;
 
 typedef struct {
-    int filled[DEPTHS];
-    Drawn draws[DEPTHS][DEPTH_SIZE];
+    Drawn draws[DRAWS];
 } draw_State;
 
 Drawn* draw_add(draw_State* state, Drawn drawn, int depth);

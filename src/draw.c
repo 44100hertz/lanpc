@@ -17,17 +17,13 @@ static void draw_one(SDL_Renderer* rdr, Drawn* d) {
 }
 
 Drawn* draw_add(draw_State* state, Drawn drawn, int depth) {
-    int at = state->filled[depth]++;
-    if (at > DEPTH_SIZE) {
-        return NULL;
-    } else {
-        state->draws[depth][at] = drawn;
-        return &state->draws[depth][at];
-    }
+    for(; !state->draws[depth].drawKind; ++depth);
+    state->draws[depth] = drawn;
+    return &state->draws[depth];
 }
 
 void draw_all(draw_State* state, SDL_Renderer* rdr) {
-    for (int i=DEPTH_SIZE*DEPTHS; i--;) {
-        draw_one(rdr, &state->draws[0][i]);
+    for (int i=DRAWS; i--;) {
+        draw_one(rdr, &state->draws[i]);
     }
 }
