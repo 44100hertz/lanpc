@@ -8,7 +8,18 @@ enum {
 enum {
     DRAWPOS_NONE,
     DRAWPOS_SCREEN,
+    DRAWPOS_BORDER,
 };
+enum {
+    ALIGN_TOP,
+    ALIGN_CENTER,
+    ALIGN_BOTTOM,
+};
+enum {
+    ALIGN_LEFT = ALIGN_TOP,
+    ALIGN_RIGHT = ALIGN_BOTTOM,
+};
+
 typedef struct {
     Uint8 kind;
     union {
@@ -18,6 +29,10 @@ typedef struct {
     Uint8 pos_kind;
     union {
         SDL_Point screen;
+        struct drawpos_border {
+            struct { Uint8 x; Uint8 y; } align;
+            Uint32 dist;
+        } border;
     } pos;
 } Drawn;
 

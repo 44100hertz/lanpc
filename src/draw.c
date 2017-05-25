@@ -10,11 +10,30 @@ static void drawRect(SDL_Renderer* rdr, SDL_Point pos, SDL_Point size) {
     SDL_RenderFillRect(rdr, &r);
 }
 
+static SDL_Point get_aligned(struct drawpos_border b) {
+    Uint32 x, y;
+
+    switch(b.align.x) {
+    case ALIGN_LEFT: x = b.dist; break;
+    case ALIGN_RIGHT: x = 240 - b.dist; break;
+    }
+
+    switch(b.align.y) {
+    case ALIGN_TOP: y = b.dist; break;
+    case ALIGN_BOTTOM: y = 240 - b.dist; break;
+    }
+
+    return (SDL_Point){x,y};
+}
+
 static void draw_one(SDL_Renderer* rdr, Drawn* d) {
     SDL_Point pos;
     switch(d->pos_kind) {
     case DRAWPOS_SCREEN:
         pos = d->pos.screen;
+        break;
+    case DRAWPOS_BORDER:
+        pos = get_aligned(d->pos.border);
         break;
     default:
         pos = (SDL_Point){0,0};
