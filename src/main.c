@@ -11,6 +11,10 @@ int main()
                                           SDL_RENDERER_ACCELERATED|
                                           SDL_RENDERER_PRESENTVSYNC);
     draw_State d;
+    draw_add(&d, (Drawn){
+            .drawKind = DRAW_FILL,
+                .col = (SDL_Color){0,0,255,0},
+        }, 0);
 
     int running = 1;
     while (running) {
