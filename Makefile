@@ -1,2 +1,3 @@
-default:
-	gcc -lSDL2 main.c -o main
+all:
+	mkdir -p bin/
+	gcc -o bin/game *.c `sdl2-config --cflags --libs`
