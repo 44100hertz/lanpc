@@ -16,7 +16,7 @@ int main()
                 .draw.rect = {.size = {20,20},
                               .col = {0,255,0,255}},
                 .pos_kind = DRAWPOS_BORDER,
-                .pos.border = {.align = {ALIGN_RIGHT, ALIGN_TOP}, .dist = 10}});
+                .pos.border = {.align = {ALIGN_RIGHT, ALIGN_TOP}, .dist = 40}});
 
     draw_add(&d, (Drawn){.kind=DRAW_FILL,
                 .draw.fill = {.col = {0,0,255,255}}});
@@ -29,8 +29,8 @@ int main()
             case SDL_QUIT: running = 0;
             }
         }
-        SDL_RenderPresent(rdr);
         draw_all(&d, rdr);
+        SDL_RenderPresent(rdr);
     }
 
     SDL_DestroyWindow(win);
