@@ -8,14 +8,17 @@ int main()
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window* win = SDL_CreateWindow("ok", 0, 0, 800, 600, 0);
     SDL_Renderer* rdr = SDL_CreateRenderer(win, -1,
-                                          SDL_RENDERER_ACCELERATED|
-                                          SDL_RENDERER_PRESENTVSYNC);
+                                           SDL_RENDERER_ACCELERATED|
+                                           SDL_RENDERER_PRESENTVSYNC);
     draw_State d;
-    draw_add(&d, (Drawn){
-            .drawKind = DRAW_RECT,
-                .draw.rect = {{20,20,20,20}},
-                .col = {0,0,255,0},
-        }, 0);
+
+    draw_add(&d, draw_newRect(
+                 (SDL_Rect){20,20,20,20},
+                 (SDL_Color){0,0,255,0}),
+             0);
+    draw_add(&d, draw_newFill(
+                 (SDL_Color){0,255,0,0})
+             0);
 
     int running = 1;
     while (running) {
