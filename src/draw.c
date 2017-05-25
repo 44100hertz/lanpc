@@ -12,8 +12,7 @@ static void draw_one(SDL_Renderer* rdr, Drawn* d) {
         SDL_RenderClear(rdr);
     case DRAW_RECT:
         SetDrawColor(rdr, d->col);
-        SDL_Rect* r = (SDL_Rect*)&d->pos;
-        SDL_RenderFillRect(rdr, r);
+        SDL_RenderFillRect(rdr, &d->draw.rect.dim);
     }
 }
 

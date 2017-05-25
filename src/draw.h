@@ -10,11 +10,10 @@ enum {
 typedef struct {
     Uint8 drawKind;
     SDL_Color col;
-    SDL_Point pos;
     union {
         struct {} null;
         struct {} fill;
-        struct { SDL_Point dim; } rect;
+        struct { SDL_Rect dim; } rect;
     } draw;
 } Drawn;
 
