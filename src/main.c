@@ -12,13 +12,17 @@ int main()
                                            SDL_RENDERER_PRESENTVSYNC);
     draw_State d;
 
-    draw_add(&d, draw_newRect(
-                 (SDL_Rect){20,20,20,20},
-                 (SDL_Color){0,0,255,0}),
-             0);
-    draw_add(&d, draw_newFill(
-                 (SDL_Color){0,255,0,0})
-             0);
+    draw_add(&d, (Drawn){ .kind=DRAW_RECT,
+                .draw.rect = {
+                .dim = {20,20,20,20},
+                .col = {0,255,0,255},
+            }
+        }, 0);
+    draw_add(&d, (Drawn){ .kind=DRAW_FILL,
+                .draw.fill = {
+                .col = {0,0,255,255},
+            }
+        }, 0);
 
     int running = 1;
     while (running) {
