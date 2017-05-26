@@ -22,10 +22,8 @@ enum {
 
 typedef struct {
     Uint8 kind;
-    union {
-        struct { SDL_Color col; } fill;
-        struct { SDL_Color col; SDL_Point size; } rect;
-    } draw;
+    SDL_Point size;
+    SDL_Color col;
     Uint8 pos_kind;
     union {
         SDL_Point screen;

@@ -12,14 +12,15 @@ int main()
                                            SDL_RENDERER_PRESENTVSYNC);
     draw_State d;
 
-    draw_add(&d, (Drawn){.kind=DRAW_RECT,
-                .draw.rect = {.size = {20,20},
-                              .col = {0,255,0,255}},
+    draw_add(&d, (Drawn){.kind = DRAW_RECT,
+                .size = {20,20},
+                .col = {0,255,0,255},
                 .pos_kind = DRAWPOS_BORDER,
-                .pos.border = {.align = {ALIGN_RIGHT, ALIGN_TOP}, .dist = 40}});
+                .pos.border = {.align = {ALIGN_CENTER, ALIGN_CENTER},
+                               .dist = 40}});
 
-    draw_add(&d, (Drawn){.kind=DRAW_FILL,
-                .draw.fill = {.col = {0,0,255,255}}});
+    draw_add(&d, (Drawn){.kind = DRAW_FILL,
+                .col = {0,0,255,255}});
 
     int running = 1;
     while (running) {

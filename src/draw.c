@@ -10,17 +10,20 @@ static void drawRect(SDL_Renderer* rdr, SDL_Point pos, SDL_Point size) {
     SDL_RenderFillRect(rdr, &r);
 }
 
-static SDL_Point get_aligned(struct drawpos_border b, int gw, int gh) {
+static SDL_Point get_aligned(Drawn* d, int gw, int gh) {
     Uint32 x, y;
+    struct drawpos_border pos = d->pos.border;
 
-    switch(b.align.x) {
-    case ALIGN_LEFT: x = b.dist; break;
-    case ALIGN_RIGHT: x = gw - b.dist; break;
+    switch(pos.align.x) {
+    case ALIGN_LEFT: x = pos.dist; break;
+    case ALIGN_CENTER: x = (gw/2) - (d->size.x/2); break;
+    case ALIGN_RIGHT: x = gw - pos.dist - d->size.x; break;
     }
 
-    switch(b.align.y) {
-    case ALIGN_TOP: y = b.dist; break;
-    case ALIGN_BOTTOM: y = gh - b.dist; break;
+    switch(pos.align.y) {
+    case ALIGN_TOP: y = pos.dist; break;
+    case ALIGN_CENTER: y = (gh/2) - (d->size.y/2); break;
+    case ALIGN_BOTTOM: y = gh - pos.dist - d->size.y; break;
     }
 
     return (SDL_Point){x,y};
@@ -33,7 +36,7 @@ static void draw_one(SDL_Renderer* rdr, Drawn* d, int gw, int gh) {
         pos = d->pos.screen;
         break;
     case DRAWPOS_BORDER:
-        pos = get_aligned(d->pos.border, gw, gh);
+        pos = get_aligned(d, gw, gh);
         break;
     default:
         pos = (SDL_Point){0,0};
@@ -41,12 +44,12 @@ static void draw_one(SDL_Renderer* rdr, Drawn* d, int gw, int gh) {
 
     switch(d->kind) {
     case DRAW_FILL:
-        setDrawColor(rdr, d->draw.fill.col);
+        setDrawColor(rdr, d->col);
         SDL_RenderClear(rdr);
         break;
     case DRAW_RECT:
-        setDrawColor(rdr, d->draw.rect.col);
-        drawRect(rdr, pos, d->draw.rect.size);
+        setDrawColor(rdr, d->col);
+        drawRect(rdr, pos, d->size);
         break;
     }
 }
