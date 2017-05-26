@@ -55,10 +55,8 @@ static void draw_one(SDL_Renderer* rdr, Drawn* d, int gw, int gh) {
 }
 
 Drawn* draw_add(draw_State* state, Drawn drawn) {
-    int depth=0;
-    for(; state->draws[depth].kind != DRAW_NONE; ++depth);
-    state->draws[depth] = drawn;
-    return &state->draws[depth];
+    state->draws[state->size++] = drawn;
+    return &state->draws[state->size];
 }
 
 void draw_all(draw_State* state, SDL_Renderer* rdr) {

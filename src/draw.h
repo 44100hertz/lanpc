@@ -35,6 +35,7 @@ typedef struct {
 } Drawn;
 
 typedef struct {
+    int size;
     Drawn draws[DRAWS];
 } draw_State;
 
