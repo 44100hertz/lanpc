@@ -10,33 +10,33 @@ static void drawRect(SDL_Renderer* rdr, SDL_Point pos, SDL_Point size) {
     SDL_RenderFillRect(rdr, &r);
 }
 
-static SDL_Point get_aligned(Drawn* d, int gw, int gh) {
+static SDL_Point get_aligned(Drawn* d, int width) {
     Uint32 x, y;
     struct drawpos_border pos = d->pos.border;
 
     switch(pos.align.x) {
     case ALIGN_LEFT: x = pos.dist; break;
-    case ALIGN_CENTER: x = (gw/2) - (d->size.x/2); break;
-    case ALIGN_RIGHT: x = gw - pos.dist - d->size.x; break;
+    case ALIGN_CENTER: x = (width/2) - (d->size.x/2); break;
+    case ALIGN_RIGHT: x = width - pos.dist - d->size.x; break;
     }
 
     switch(pos.align.y) {
     case ALIGN_TOP: y = pos.dist; break;
-    case ALIGN_CENTER: y = (gh/2) - (d->size.y/2); break;
-    case ALIGN_BOTTOM: y = gh - pos.dist - d->size.y; break;
+    case ALIGN_CENTER: y = (GAMEH/2) - (d->size.y/2); break;
+    case ALIGN_BOTTOM: y = GAMEH - pos.dist - d->size.y; break;
     }
 
     return (SDL_Point){x,y};
 }
 
-static void draw_one(SDL_Renderer* rdr, Drawn* d, int gw, int gh) {
+static void draw_one(SDL_Renderer* rdr, Drawn* d, int width) {
     SDL_Point pos;
     switch(d->pos_kind) {
     case DRAWPOS_SCREEN:
         pos = d->pos.screen;
         break;
     case DRAWPOS_BORDER:
-        pos = get_aligned(d, gw, gh);
+        pos = get_aligned(d, width);
         break;
     default:
         pos = (SDL_Point){0,0};
@@ -60,11 +60,11 @@ Drawn* draw_add(draw_State* state, Drawn drawn) {
 }
 
 void draw_all(draw_State* state, SDL_Renderer* rdr) {
-    int gw, gh;
-    SDL_GetRendererOutputSize(rdr, &gw, &gh);
-    int width = 160 * gw / gh;
-    SDL_RenderSetLogicalSize(rdr, width, 160);
-    for (int i=DRAWS; i--;) {
-        draw_one(rdr, &state->draws[i], width, 160);
+    int ww, wh;
+    SDL_GetRendererOutputSize(rdr, &ww, &wh);
+    int width = GAMEH * ww / wh;
+    SDL_RenderSetLogicalSize(rdr, width, GAMEH);
+    for (int i=0; i<DRAWS; ++i) {
+        draw_one(rdr, &state->draws[i], width);
     }
 }

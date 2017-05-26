@@ -1,4 +1,5 @@
 #define DRAWS 256
+#define GAMEH 160
 
 enum {
     DRAW_NONE,
