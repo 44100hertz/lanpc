@@ -62,7 +62,9 @@ Drawn* draw_add(draw_State* state, Drawn drawn) {
 void draw_all(draw_State* state, SDL_Renderer* rdr) {
     int gw, gh;
     SDL_GetRendererOutputSize(rdr, &gw, &gh);
+    int width = 160 * gw / gh;
+    SDL_RenderSetLogicalSize(rdr, width, 160);
     for (int i=DRAWS; i--;) {
-        draw_one(rdr, &state->draws[i], gw, gh);
+        draw_one(rdr, &state->draws[i], width, 160);
     }
 }
