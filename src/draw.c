@@ -61,8 +61,9 @@ void draw_all(draw_State* state, SDL_Renderer* rdr) {
     int ww, wh;
     SDL_GetRendererOutputSize(rdr, &ww, &wh);
     int width = GAMEH * ww / wh;
+    width = width > 240 ? width : 240;
     SDL_RenderSetLogicalSize(rdr, width, GAMEH);
-    for (int i=0; i<DRAWS; ++i) {
+    for (int i=DRAWS; i--;) {
         draw_one(rdr, &state->draws[i], width);
     }
 }
