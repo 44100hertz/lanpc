@@ -38,8 +38,6 @@ static void draw_one(SDL_Renderer* rdr, Drawn* d, int width) {
     case DRAWPOS_BORDER:
         pos = get_aligned(d, width);
         break;
-    default:
-        pos = (SDL_Point){0,0};
     }
 
     switch(d->kind) {
