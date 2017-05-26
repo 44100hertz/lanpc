@@ -10,7 +10,10 @@ int main()
     SDL_Renderer* rdr = SDL_CreateRenderer(win, -1,
                                            SDL_RENDERER_ACCELERATED|
                                            SDL_RENDERER_PRESENTVSYNC);
-    draw_State d;
+    draw_State d = {0};
+
+    draw_add(&d, (Drawn){.kind = DRAW_FILL,
+                .col = {0,0,255,255}});
 
     draw_add(&d, (Drawn){.kind = DRAW_RECT,
                 .size = {20,20},
@@ -18,9 +21,6 @@ int main()
                 .pos_kind = DRAWPOS_BORDER,
                 .pos.border = {.align = {ALIGN_CENTER, ALIGN_CENTER},
                                .dist = 40}});
-
-    draw_add(&d, (Drawn){.kind = DRAW_FILL,
-                .col = {0,0,255,255}});
 
     int running = 1;
     while (running) {
