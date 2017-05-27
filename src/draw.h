@@ -2,18 +2,18 @@
 #define DEPTHS 8
 #define GAMEH 160
 
-enum {
+enum Draw {
     DRAW_NONE,
     DRAW_FILL,
     DRAW_RECT,
 };
-enum {
+enum Drawpos {
     DRAWPOS_NONE,
     DRAWPOS_SCREEN,
     DRAWPOS_BORDER,
     DRAWPOS_3D,
 };
-enum {
+enum Align {
     ALIGN_TOP,
     ALIGN_CENTER,
     ALIGN_BOTTOM,
@@ -28,16 +28,16 @@ enum Depth {
 };
 
 typedef struct {
-    Uint8 kind;
+    enum Draw kind;
     enum Depth depth_mode;
     Uint8 depth;
     SDL_Point size;
     SDL_Color col;
-    Uint8 pos_kind;
+    enum Drawpos pos_kind;
     union {
         SDL_Point screen;
         struct drawpos_border {
-            struct { Uint8 x; Uint8 y; } align;
+            struct { enum Align x; enum Align y; } align;
             Uint32 dist;
         } border;
         struct drawpos_3d {
