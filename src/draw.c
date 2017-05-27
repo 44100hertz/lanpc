@@ -1,7 +1,5 @@
 #include <SDL2/SDL.h>
 #include "draw.h"
-#define PANELW 40
-#define PANELH 24
 
 static void setDrawColor(SDL_Renderer* rdr, SDL_Color col) {
     SDL_SetRenderDrawColor(rdr, col.r, col.g, col.b, col.a);
@@ -31,8 +29,10 @@ static SDL_Point get_aligned(Drawn* d, int width) {
     return (SDL_Point){x,y};
 }
 
-static void draw_one(SDL_Renderer* rdr, Drawn* d, int width) {
+static SDL_Point get_pos(draw_State* state, int i,
+                         int width, SDL_Rect tform) {
     SDL_Point pos = {0};
+    Drawn *d = &state->draws[i];
     switch(d->pos_kind) {
     case DRAWPOS_SCREEN:
         pos = d->pos.screen;
@@ -41,19 +41,23 @@ static void draw_one(SDL_Renderer* rdr, Drawn* d, int width) {
         pos = get_aligned(d, width);
         break;
     case DRAWPOS_3D:
-        pos = (SDL_Point){PANELW*d->pos.three.x,
-                          PANELH*d->pos.three.y - d->pos.three.z};
+        pos = (SDL_Point){tform.x + tform.w*d->pos.three.x,
+                          tform.y + tform.h*d->pos.three.y - d->pos.three.z};
         break;
     }
+    return pos;
+}
 
-    switch(d->kind) {
+static void draw_one(SDL_Renderer* rdr, draw_State* state, int i,
+                     int width, SDL_Rect tform) {
+    switch(state->draws[i].kind) {
     case DRAW_FILL:
-        setDrawColor(rdr, d->col);
+        setDrawColor(rdr, state->draws[i].col);
         SDL_RenderClear(rdr);
         break;
     case DRAW_RECT:
-        setDrawColor(rdr, d->col);
-        drawRect(rdr, pos, d->size);
+        setDrawColor(rdr, state->draws[i].col);
+        drawRect(rdr, get_pos(state, i, width, tform), state->draws[i].size);
         break;
     }
 }
@@ -63,32 +67,28 @@ Drawn* draw_add(draw_State* state, Drawn drawn) {
     return &state->draws[state->size];
 }
 
-int calc_depth(struct drawpos_3d pos) {
-    float pure_depth = pos.y + pos.z / 24;
-    int depth = (pure_depth / DEPTHS) + 1;
-    depth = depth < 0 ? 0 : depth;
-    depth = depth > DEPTHS ? DEPTHS : depth;
-    return depth;
-}
-
 void draw_all(draw_State* state, SDL_Renderer* rdr) {
+    // get window info and update transforms
     int ww, wh;
     SDL_GetRendererOutputSize(rdr, &ww, &wh);
     int width = GAMEH * ww / wh;
-    width = width > GAMEW ? width : GAMEW;
+    if (width < GAMEW) width = GAMEW;
+    int stage_width = state->panels.x * state->tform.w;
+    state->tform.x = width/2 - stage_width/2;
+
     SDL_RenderSetLogicalSize(rdr, width, GAMEH);
 
     for (int i=DRAWS; i--;) {
         Drawn* drawn = &state->draws[i];
         if(drawn->depth_mode == DEPTH_AUTO) {
-            drawn->depth = calc_depth(drawn->pos.three);
+            drawn->depth = 1.0f + drawn->pos.three.y * 2.0f;
         }
     }
 
     for (int i=DEPTHS; i--;) {
         for (int j=0; j<DRAWS; ++j) {
             if (state->draws[j].depth == i)
-                draw_one(rdr, &state->draws[j], width);
+                draw_one(rdr, state, j, width, state->tform);
         }
     }
 }

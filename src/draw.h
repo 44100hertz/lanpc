@@ -51,8 +51,15 @@ typedef struct {
 
 typedef struct {
     int size;
+    SDL_Rect tform;
+    SDL_Point panels;
     Drawn draws[DRAWS];
 } draw_State;
+
+static const draw_State draw_State_battle = {
+    .tform = {0,60,40,24},
+    .panels = {6,3},
+};
 
 Drawn* draw_add(draw_State* state, Drawn drawn);
 void draw_all(draw_State* state, SDL_Renderer* rdr);
