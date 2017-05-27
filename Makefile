@@ -1,3 +1,5 @@
+CC?=gcc
+
 all:
 	mkdir -p bin/
-	gcc -o bin/game src/*.c `sdl2-config --cflags --libs`
+	$(CC) -o bin/game src/*.c `sdl2-config --cflags --libs`
