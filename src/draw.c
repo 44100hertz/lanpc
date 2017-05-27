@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 #include "draw.h"
+#define PANELW 40
+#define PANELH 24
 
 static void setDrawColor(SDL_Renderer* rdr, SDL_Color col) {
     SDL_SetRenderDrawColor(rdr, col.r, col.g, col.b, col.a);
@@ -39,8 +41,8 @@ static void draw_one(SDL_Renderer* rdr, Drawn* d, int width) {
         pos = get_aligned(d, width);
         break;
     case DRAWPOS_3D:
-        pos = (SDL_Point){40*d->pos.three.x,
-                          24*d->pos.three.y - d->pos.three.z};
+        pos = (SDL_Point){PANELW*d->pos.three.x,
+                          PANELH*d->pos.three.y - d->pos.three.z};
         break;
     }
 
@@ -61,21 +63,25 @@ Drawn* draw_add(draw_State* state, Drawn drawn) {
     return &state->draws[state->size];
 }
 
+int calc_depth(struct drawpos_3d pos) {
+    float pure_depth = pos.y + pos.z / 24;
+    int depth = (pure_depth / DEPTHS) + 1;
+    depth = depth < 0 ? 0 : depth;
+    depth = depth > DEPTHS ? DEPTHS : depth;
+    return depth;
+}
+
 void draw_all(draw_State* state, SDL_Renderer* rdr) {
     int ww, wh;
     SDL_GetRendererOutputSize(rdr, &ww, &wh);
     int width = GAMEH * ww / wh;
-    width = width > 240 ? width : 240;
+    width = width > GAMEW ? width : GAMEW;
     SDL_RenderSetLogicalSize(rdr, width, GAMEH);
 
     for (int i=DRAWS; i--;) {
-        Drawn* draw = &state->draws[i];
-        if(draw->depth_mode == DEPTH_AUTO) {
-            float pure_depth = draw->pos.three.y + draw->pos.three.z / 24;
-            int depth = (pure_depth / DEPTHS) + 1;
-            depth = depth < 0 ? 0 : depth;
-            depth = depth > DEPTHS ? DEPTHS : depth;
-            draw->depth = (Uint8)depth;
+        Drawn* drawn = &state->draws[i];
+        if(drawn->depth_mode == DEPTH_AUTO) {
+            drawn->depth = calc_depth(drawn->pos.three);
         }
     }
 

@@ -1,5 +1,6 @@
 #define DRAWS 256
 #define DEPTHS 8
+#define GAMEW 240 // minimum width, varies
 #define GAMEH 160
 
 enum Draw {
