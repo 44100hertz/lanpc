@@ -71,8 +71,8 @@ void draw_all(draw_State* state, SDL_Renderer* rdr) {
     for (int i=DRAWS; i--;) {
         Drawn* draw = &state->draws[i];
         if(draw->depth_mode == DEPTH_AUTO) {
-            double pure_depth = draw->pos.three.y + draw->pos.three.z / 24;
-            int depth = (depth / DEPTHS) + 1;
+            float pure_depth = draw->pos.three.y + draw->pos.three.z / 24;
+            int depth = (pure_depth / DEPTHS) + 1;
             depth = depth < 0 ? 0 : depth;
             depth = depth > DEPTHS ? DEPTHS : depth;
             draw->depth = (Uint8)depth;
