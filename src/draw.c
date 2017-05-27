@@ -80,8 +80,10 @@ void draw_all(draw_State* state, SDL_Renderer* rdr) {
 
     for (int i=DRAWS; i--;) {
         Drawn* drawn = &state->draws[i];
-        if(drawn->depth_mode == DEPTH_AUTO) {
+        if (drawn->depth_mode > DEPTH_FIXED) {
             drawn->depth = 1.0f + drawn->pos.three.y * 2.0f;
+            if (drawn->depth_mode == DEPTH_ONCE)
+                drawn->depth_mode = DEPTH_FIXED;
         }
     }
 
