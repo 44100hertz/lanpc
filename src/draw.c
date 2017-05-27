@@ -11,7 +11,7 @@ static void drawRect(SDL_Renderer* rdr, SDL_Point pos, SDL_Point size) {
 }
 
 static SDL_Point get_aligned(Drawn* d, int width) {
-    Uint32 x, y;
+    int x, y;
     struct drawpos_border pos = d->pos.border;
 
     switch(pos.align.x) {
@@ -30,7 +30,7 @@ static SDL_Point get_aligned(Drawn* d, int width) {
 }
 
 static void draw_one(SDL_Renderer* rdr, Drawn* d, int width) {
-    SDL_Point pos;
+    SDL_Point pos = {0};
     switch(d->pos_kind) {
     case DRAWPOS_SCREEN:
         pos = d->pos.screen;

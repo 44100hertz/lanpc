@@ -29,10 +29,12 @@ enum Depth {
 
 typedef struct {
     enum Draw kind;
-    enum Depth depth_mode;
-    Uint8 depth;
     SDL_Point size;
     SDL_Color col;
+
+    enum Depth depth_mode;
+    int depth;
+
     enum Drawpos pos_kind;
     union {
         SDL_Point screen;
