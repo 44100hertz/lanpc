@@ -22,4 +22,4 @@ void scene_run(Scene s) {
     }
     s.free(&s);
     if(is_root) internal_free(&s.it);
-};
+}

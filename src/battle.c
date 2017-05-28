@@ -42,7 +42,7 @@ Scene battle_new() {
             col.a = 255;
             draw_add(&battle.draw, (Drawn){.kind = DRAW_RECT,
                         .size = {40,24},
-                        .col = col,
+                        .draw.fill = col,
                         .pos_kind = DRAWPOS_3D,
                         .pos.three = {x,y,0}});
         }

@@ -52,11 +52,11 @@ static void draw_one(SDL_Renderer* rdr, draw_State* state, int i,
                      int width, SDL_Rect tform) {
     switch(state->draws[i].kind) {
     case DRAW_FILL:
-        setDrawColor(rdr, state->draws[i].col);
+        setDrawColor(rdr, state->draws[i].draw.fill);
         SDL_RenderClear(rdr);
         break;
     case DRAW_RECT:
-        setDrawColor(rdr, state->draws[i].col);
+        setDrawColor(rdr, state->draws[i].draw.fill);
         drawRect(rdr, get_pos(state, i, width, tform), state->draws[i].size);
         break;
     }
@@ -68,7 +68,6 @@ Drawn* draw_add(draw_State* state, Drawn drawn) {
 }
 
 void draw_all(draw_State* state, SDL_Renderer* rdr) {
-    // get window info and update transforms
     int ww, wh;
     SDL_GetRendererOutputSize(rdr, &ww, &wh);
     int width = GAMEH * ww / wh;
