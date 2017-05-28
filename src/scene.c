@@ -18,4 +18,5 @@ void scene_run(Scene s, SDL_Renderer* rdr) {
         draw_all(&s.draw, rdr);
         SDL_RenderPresent(rdr);
     }
+    s.free(&s);
 };
