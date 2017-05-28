@@ -1,3 +1,4 @@
+#include <SDL2/SDL.h>
 #include "internal.h"
 #include "draw.h"
 #include "scene.h"

@@ -1,3 +1,4 @@
+#include <SDL2/SDL.h>
 #include "internal.h"
 
 Internal internal_new() {

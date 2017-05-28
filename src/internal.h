@@ -1,4 +1,3 @@
-#include <SDL2/SDL.h>
 #define GAMEW 240 // minimum width, varies
 #define GAMEH 160
 
