@@ -1,8 +1,10 @@
-#include <SDL2/SDL.h>
+#include "internal.h"
 #include "draw.h"
 #include "scene.h"
 
-void scene_run(Scene s, SDL_Renderer* rdr) {
+void scene_run(Scene s) {
+    int is_root = !s.it.rdr;
+    if(is_root) s.it = internal_new();
     while (!s.quit) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
@@ -13,10 +15,11 @@ void scene_run(Scene s, SDL_Renderer* rdr) {
             }
         }
         s.update(&s);
-        SDL_SetRenderDrawColor(rdr, 0,0,0,255);
-        SDL_RenderClear(rdr);
-        draw_all(&s.draw, rdr);
-        SDL_RenderPresent(rdr);
+        SDL_SetRenderDrawColor(s.it.rdr, 0,0,0,255);
+        SDL_RenderClear(s.it.rdr);
+        draw_all(&s.draw, s.it.rdr);
+        SDL_RenderPresent(s.it.rdr);
     }
     s.free(&s);
+    if(is_root) internal_free(&s.it);
 };

@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include "internal.h"
 #include "draw.h"
 #include "scene.h"
 
@@ -8,6 +8,7 @@
 typedef struct {
     int turf[NUMY];
     struct Panel {
+        // ...
     } panels[NUMY][NUMX];
 } battle_Data;
 

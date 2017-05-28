@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include "internal.h"
 #include "draw.h"
 
 static void setDrawColor(SDL_Renderer* rdr, SDL_Color col) {
