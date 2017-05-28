@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "internal.h"
 #include "draw.h"
 #include "scene.h"

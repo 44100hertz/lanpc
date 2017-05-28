@@ -1,6 +1,7 @@
 #include "internal.h"
 #include "draw.h"
 #include "scene.h"
+#include "battle.h"
 
 #define NUMX 6
 #define NUMY 3
@@ -13,6 +14,7 @@ typedef struct {
 } battle_Data;
 
 static int battle_update(Scene* battle) {
+    return 1;
 }
 static void battle_free(Scene* battle) {
     free(battle->userdata);
@@ -32,7 +34,7 @@ Scene battle_new() {
     for(int i=NUMY; i--;) d->turf[i] = 3;
     for(int x=0; x<NUMX; ++x) {
         for(int y=0; y<NUMY; ++y) {
-            int lum = x*11 + y*17 + 128;
+            Uint8 lum = x*11 + y*17 + 128;
             SDL_Color col;
             col.r = lum;
             col.g = lum - 64 * (x >= d->turf[y]);

@@ -1,2 +1,2 @@
 // #include "scene.h"
-Scene battle_new();
+Scene battle_new(void);

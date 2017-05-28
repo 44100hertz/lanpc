@@ -7,5 +7,5 @@ typedef struct {
     SDL_Renderer* rdr;
 } Internal;
 
-Internal internal_new();
+Internal internal_new(void);
 void internal_free(Internal* i);
