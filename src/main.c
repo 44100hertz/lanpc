@@ -10,7 +10,8 @@
 int main()
 {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* win = SDL_CreateWindow("ok", 0, 0, 800, 480, 0);
+    SDL_Window* win = SDL_CreateWindow("ok", 0, 0, GAMEW*3, GAMEH*3, 0);
+    SDL_SetWindowMinimumSize(win, GAMEW, GAMEH);
     SDL_Renderer* rdr = SDL_CreateRenderer(win, -1,
                                            SDL_RENDERER_ACCELERATED|
                                            SDL_RENDERER_PRESENTVSYNC);
