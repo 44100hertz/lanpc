@@ -11,7 +11,7 @@ static void drawRect(SDL_Renderer* rdr, SDL_Point pos, SDL_Point size) {
     SDL_RenderFillRect(rdr, &r);
 }
 
-static SDL_Point get_aligned(Drawn* d, int width) {
+static SDL_Point get_aligned(const Drawn* d, int width) {
     int x, y;
     struct drawpos_border pos = d->pos.border;
 
@@ -30,10 +30,10 @@ static SDL_Point get_aligned(Drawn* d, int width) {
     return (SDL_Point){x,y};
 }
 
-static SDL_Point get_pos(draw_State* state, int i,
+static SDL_Point get_pos(const draw_List* state, int i,
                          int width, SDL_Rect tform) {
     SDL_Point pos = {0};
-    Drawn *d = &state->draws[i];
+    const Drawn *d = &state->draws[i];
     switch(d->pos_kind) {
     case DRAWPOS_SCREEN:
         pos = d->pos.screen;
@@ -49,7 +49,7 @@ static SDL_Point get_pos(draw_State* state, int i,
     return pos;
 }
 
-static void draw_one(SDL_Renderer* rdr, draw_State* state, int i,
+static void draw_one(SDL_Renderer* rdr, const draw_List* state, int i,
                      int width, SDL_Rect tform) {
     switch(state->draws[i].kind) {
     case DRAW_FILL:
@@ -63,12 +63,12 @@ static void draw_one(SDL_Renderer* rdr, draw_State* state, int i,
     }
 }
 
-Drawn* draw_add(draw_State* state, Drawn drawn) {
+Drawn* draw_add(draw_List* state, Drawn drawn) {
     state->draws[state->size] = drawn;
     return &state->draws[state->size++];
 }
 
-void draw_all(draw_State* state, SDL_Renderer* rdr) {
+void draw_all(draw_List* state, SDL_Renderer* rdr) {
     int ww, wh;
     SDL_GetRendererOutputSize(rdr, &ww, &wh);
     int width = GAMEH * ww / wh;

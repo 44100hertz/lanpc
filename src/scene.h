@@ -3,7 +3,7 @@
 typedef struct Scene {
     Internal it;
     Input input;
-    draw_State draw;
+    draw_List draw;
     int quit;
     int (*update)(struct Scene*);
     void (*free)(struct Scene*);
