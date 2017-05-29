@@ -28,6 +28,6 @@ void scene_run(Scene s) {
         draw_all(&s.draw, s.it.rdr);
         SDL_RenderPresent(s.it.rdr);
     }
-    s.free(&s);
+    if(s.free) s.free(&s);
     if(is_root) internal_free(&s.it);
 }
