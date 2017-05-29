@@ -19,7 +19,7 @@ static void turf_color(struct Panel p[NUMY][NUMX], int turf[NUMY]) {
     }
 }
 void turf_set(Scene* battle, int turf[NUMY]) {
-    Battle* d = (Battle*)battle->data;
+    Battle* d = battle->data;
     if(turf) {
         memcpy(d->turf, turf, sizeof(turf[0]) * NUMY);
         d->turf_clock = 100;
@@ -30,7 +30,7 @@ void turf_set(Scene* battle, int turf[NUMY]) {
 }
 
 static int battle_update(Scene* battle) {
-    Battle* d = (Battle*)battle->data;
+    Battle* d = battle->data;
     return 1;
 }
 static void battle_free(Scene* battle) {
