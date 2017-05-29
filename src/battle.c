@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include "internal.h"
 #include "draw.h"
+#include "input.h"
 #include "scene.h"
 #include "battle.h"
 

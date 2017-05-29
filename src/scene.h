@@ -2,6 +2,7 @@
 
 typedef struct Scene {
     Internal it;
+    Input input;
     draw_State draw;
     int quit;
     int (*update)(struct Scene*);
