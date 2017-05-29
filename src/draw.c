@@ -64,8 +64,8 @@ static void draw_one(SDL_Renderer* rdr, draw_State* state, int i,
 }
 
 Drawn* draw_add(draw_State* state, Drawn drawn) {
-    state->draws[state->size++] = drawn;
-    return &state->draws[state->size];
+    state->draws[state->size] = drawn;
+    return &state->draws[state->size++];
 }
 
 void draw_all(draw_State* state, SDL_Renderer* rdr) {
