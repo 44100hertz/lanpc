@@ -20,12 +20,12 @@ static void turf_color(struct Panel p[NUMY][NUMX], int turf[NUMY]) {
 }
 void turf_set(Scene* battle, int turf[NUMY]) {
     Battle* d = (Battle*)battle->data;
-    memmove(&d->turf, turf, sizeof(turf[0]) * NUMY);
-    d->turf_clock = 100;
-    turf_color(d->panels, d->turf);
-}
-static void turf_set_default(Battle* d) {
-    turf_default(d->turf);
+    if(turf) {
+        memcpy(d->turf, turf, sizeof(turf[0]) * NUMY);
+        d->turf_clock = 100;
+    } else {
+        turf_default(d->turf);
+    }
     turf_color(d->panels, d->turf);
 }
 
@@ -59,6 +59,6 @@ Scene battle_new() {
                             .pos.three = {x,y,0}});
         }
     }
-    turf_set_default(d);
+    turf_set(&battle, 0);
     return battle;
 }
