@@ -7,7 +7,7 @@ typedef struct Scene {
     int quit;
     int (*update)(struct Scene*);
     void (*free)(struct Scene*);
-    void* userdata;
+    void* data;
 } Scene;
 
 void scene_run(Scene s);

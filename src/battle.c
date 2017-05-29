@@ -1,25 +1,40 @@
 #include <SDL2/SDL.h>
+#include <string.h>
 #include "internal.h"
 #include "draw.h"
 #include "input.h"
 #include "scene.h"
 #include "battle.h"
 
-#define NUMX 6
-#define NUMY 3
-
-typedef struct {
-    int turf[NUMY];
-    struct Panel {
-        // ...
-    } panels[NUMY][NUMX];
-} battle_Data;
+static void turf_default(int turf[NUMY]) {
+    for(int i=NUMY; i--;) turf[i] = NUMX/2;
+}
+static void turf_color(struct Panel p[NUMY][NUMX], int turf[NUMY]) {
+    for(int x=NUMX; x--;) {
+        for(int y=NUMY; y--;) {
+            Uint8 lum = x*11 + y*17 + 128;
+            Uint8 gb = lum - 64 * (x >= turf[y]);
+            p[y][x].draw->draw.fill = (SDL_Color){lum, gb, gb, 255};
+        }
+    }
+}
+void turf_set(Scene* battle, int turf[NUMY]) {
+    Battle* d = (Battle*)battle->data;
+    memmove(&d->turf, turf, sizeof(turf[0]) * NUMY);
+    d->turf_clock = 100;
+    turf_color(d->panels, d->turf);
+}
+static void turf_set_default(Battle* d) {
+    turf_default(d->turf);
+    turf_color(d->panels, d->turf);
+}
 
 static int battle_update(Scene* battle) {
+    Battle* d = (Battle*)battle->data;
     return 1;
 }
 static void battle_free(Scene* battle) {
-    free(battle->userdata);
+    free(battle->data);
 }
 
 Scene battle_new() {
@@ -30,24 +45,20 @@ Scene battle_new() {
         },
         .update = battle_update,
         .free = battle_free,
-        .userdata = malloc(sizeof(battle_Data)),
+        .data = malloc(sizeof(Battle)),
     };
-    battle_Data* d = battle.userdata;
-    for(int i=NUMY; i--;) d->turf[i] = 3;
-    for(int x=0; x<NUMX; ++x) {
-        for(int y=0; y<NUMY; ++y) {
-            Uint8 lum = x*11 + y*17 + 128;
-            SDL_Color col;
-            col.r = lum;
-            col.g = lum - 64 * (x >= d->turf[y]);
-            col.b = lum - 64 * (x >= d->turf[y]);
-            col.a = 255;
-            draw_add(&battle.draw, (Drawn){.kind = DRAW_RECT,
-                        .size = {40,24},
-                        .draw.fill = col,
-                        .pos_kind = DRAWPOS_3D,
-                        .pos.three = {x,y,0}});
+    Battle* d = battle.data;
+
+    // initialize panels
+    for(int x=NUMX; x--;) {
+        for(int y=NUMY; y--;) {
+            d->panels[y][x].draw =
+                draw_add(&battle.draw, (Drawn){.kind = DRAW_RECT,
+                            .size = {40,24},
+                            .pos_kind = DRAWPOS_3D,
+                            .pos.three = {x,y,0}});
         }
     }
+    turf_set_default(d);
     return battle;
 }
