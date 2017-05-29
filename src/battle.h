@@ -1,6 +1,9 @@
 // #include "scene.h"
 #define NUMX 6
 #define NUMY 3
+#define STAGEH 72
+#define PANELW (GAMEW/NUMX)
+#define PANELH (STAGEH/NUMY)
 
 typedef struct {
     int turf[NUMY];

@@ -12,8 +12,8 @@ static void turf_default(int turf[NUMY]) {
 static void turf_color(struct Panel p[NUMY][NUMX], int turf[NUMY]) {
     for(int x=NUMX; x--;) {
         for(int y=NUMY; y--;) {
-            Uint8 lum = x*11 + y*17 + 128;
-            Uint8 gb = lum - 64 * (x >= turf[y]);
+            int lum = x*11 + y*17 + 128;
+            int gb = lum - 64 * (x >= turf[y]);
             p[y][x].draw->draw.fill = (SDL_Color){lum, gb, gb, 255};
         }
     }
@@ -40,7 +40,7 @@ static void battle_free(Scene* battle) {
 Scene battle_new() {
     Scene battle = {
         .draw = {
-            .tform = {0,60,40,24},
+            .tform = {0, 60, PANELW, PANELH},
             .panels = {NUMX, NUMY},
         },
         .update = battle_update,
@@ -54,7 +54,7 @@ Scene battle_new() {
         for(int y=NUMY; y--;) {
             d->panels[y][x].draw =
                 draw_add(&battle.draw, (Drawn){.kind = DRAW_RECT,
-                            .size = {40,24},
+                            .size = {GAMEW/NUMX, PANELH},
                             .pos_kind = DRAWPOS_3D,
                             .pos.three = {x,y,0}});
         }
