@@ -58,5 +58,5 @@ typedef struct {
     Drawn draws[DRAWS];
 } draw_State;
 
-Drawn* draw_add(draw_State* state, Drawn drawn);
+int draw_add(draw_State* state, Drawn drawn);
 void draw_all(draw_State* state, SDL_Renderer* rdr);
