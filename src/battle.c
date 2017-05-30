@@ -13,10 +13,10 @@ static void turf_color(Scene* s, int turf[NUMY]) {
     Battle* b = s->data;
     for(int x=NUMX; x--;) {
         for(int y=NUMY; y--;) {
-            Drawn* d = &s->draw.draws[b->panels[y][x].draw];
             Uint8 lum = x*11 + y*17 + 128;
             Uint8 gb = lum - 64 * (x >= turf[y]);
-            d->draw.fill = (SDL_Color){lum, gb, gb, 255};
+            s->draw.draws[b->panels[y][x].draw].draw.fill =
+                (SDL_Color){lum, gb, gb, 255};
         }
     }
 }
@@ -41,12 +41,12 @@ static int battle_update(Scene* s) {
     }
     return 1;
 }
-static void battle_free(Scene* battle) {
-    free(battle->data);
+static void battle_free(Scene* s) {
+    free(s->data);
 }
 
 Scene battle_new() {
-    Scene battle = {
+    Scene s = {
         .draw = {
             .tform = {0,60,40,24},
             .panels = {NUMX, NUMY},
@@ -55,18 +55,18 @@ Scene battle_new() {
         .free = battle_free,
         .data = malloc(sizeof(Battle)),
     };
-    Battle* d = battle.data;
+    Battle* b = s.data;
 
     // initialize panels
     for(int x=NUMX; x--;) {
         for(int y=NUMY; y--;) {
-            d->panels[y][x].draw =
-                draw_add(&battle.draw, (Drawn){.kind = DRAW_RECT,
+            b->panels[y][x].draw =
+                draw_add(&s.draw, (Drawn){.kind = DRAW_RECT,
                             .size = {40,24},
                             .pos_kind = DRAWPOS_3D,
                             .pos.three = {x,y,0}});
         }
     }
-    turf_set(&battle, 0);
-    return battle;
+    turf_set(&s, 0);
+    return s;
 }
