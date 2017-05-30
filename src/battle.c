@@ -5,9 +5,11 @@
 #include "input.h"
 #include "scene.h"
 #include "battle.h"
+#include "anim.h"
 
-static void turf_default(int turf[NUMY]) {
+static int* turf_default(int turf[NUMY]) {
     for(int i=NUMY; i--;) turf[i] = NUMX/2;
+    return turf;
 }
 static void turf_color(Scene* s, int turf[NUMY]) {
     Battle* b = s->data;
@@ -24,7 +26,7 @@ void turf_set(Scene* s, int turf[NUMY]) {
     Battle* b = s->data;
     if(turf) {
         memcpy(b->turf, turf, sizeof(turf[0]) * NUMY);
-        b->turf_clock = 100;
+        b->turf_clock = 256;
     } else {
         turf_default(b->turf);
     }
@@ -36,8 +38,16 @@ static int battle_update(Scene* s) {
     if((s->input.hist.a & 3) == 1) {
         turf_set(s, (int[3]){1,2,3});
     }
-    if(b->turf_clock && !--b->turf_clock) {
-        turf_set(s, 0);
+    if(b->turf_clock) {
+        if(!--b->turf_clock) {
+            turf_set(s, 0);
+        } else {
+            // display blinkout animation
+            int* turf = anim_blink(b->turf_clock, 8) ?
+                b->turf :
+                turf_default((int[NUMY]){0});
+            turf_color(s, turf);
+        }
     }
     return 1;
 }
