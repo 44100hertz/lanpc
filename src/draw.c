@@ -13,7 +13,7 @@ static void drawRect(SDL_Renderer* rdr, SDL_Point pos, SDL_Point size) {
 
 static SDL_Point get_aligned(const Drawn* d, int width) {
     int x, y;
-    struct drawpos_border pos = d->pos.border;
+    struct drawpos_border pos = d->border;
 
     switch(pos.align.x) {
     case ALIGN_LEFT: x = pos.dist; break;
@@ -36,14 +36,14 @@ static SDL_Point get_pos(const draw_List* state, int i,
     const Drawn *d = &state->draws[i];
     switch(d->pos_kind) {
     case DRAWPOS_SCREEN:
-        pos = d->pos.screen;
+        pos = d->screen;
         break;
     case DRAWPOS_BORDER:
         pos = get_aligned(d, width);
         break;
     case DRAWPOS_3D:
-        pos = (SDL_Point){tform.x + tform.w*d->pos.three.x,
-                          tform.y + tform.h*d->pos.three.y - d->pos.three.z};
+        pos = (SDL_Point){tform.x + tform.w*d->three.x,
+                          tform.y + tform.h*d->three.y - d->three.z};
         break;
     }
     return pos;
@@ -53,11 +53,11 @@ static void draw_one(SDL_Renderer* rdr, const draw_List* state, int i,
                      int width, SDL_Rect tform) {
     switch(state->draws[i].kind) {
     case DRAW_FILL:
-        setDrawColor(rdr, state->draws[i].draw.fill);
+        setDrawColor(rdr, state->draws[i].fill);
         SDL_RenderClear(rdr);
         break;
     case DRAW_RECT:
-        setDrawColor(rdr, state->draws[i].draw.fill);
+        setDrawColor(rdr, state->draws[i].fill);
         drawRect(rdr, get_pos(state, i, width, tform), state->draws[i].size);
         break;
     }
@@ -81,7 +81,7 @@ void draw_all(draw_List* state, SDL_Renderer* rdr) {
     for (int i=DRAWS; i--;) {
         Drawn* drawn = &state->draws[i];
         if (drawn->depth_mode > DEPTH_FIXED) {
-            drawn->depth = 1.0f + drawn->pos.three.y * 2.0f;
+            drawn->depth = 1.0f + drawn->three.y * 2.0f;
             if (drawn->depth_mode == DEPTH_ONCE)
                 drawn->depth_mode = DEPTH_FIXED;
         }

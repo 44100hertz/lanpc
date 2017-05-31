@@ -17,7 +17,7 @@ static void turf_color(Scene* s, int turf[NUMY]) {
         for(int y=NUMY; y--;) {
             int lum = x*11 + y*17 + 128;
             int gb = lum - 64 * (x >= turf[y]);
-            s->draw.draws[b->panels[y][x].draw].draw.fill =
+            s->draw.draws[b->panels[y][x].draw].fill =
                 (SDL_Color){lum, gb, gb, 255};
         }
     }
@@ -74,7 +74,7 @@ Scene battle_new() {
                 draw_add(&s.draw, (Drawn){.kind = DRAW_RECT,
                             .size = {40,24},
                             .pos_kind = DRAWPOS_3D,
-                            .pos.three = {x,y,0}});
+                            .three = {x,y,0}});
         }
     }
     turf_set(&s, 0);

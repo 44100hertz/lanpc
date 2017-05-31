@@ -12,13 +12,7 @@ void scene_run(Scene s) {
     }
     while (!s.quit) {
         SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            switch (e.type) {
-            case SDL_QUIT:
-                s.quit = 1;
-                break;
-            }
-        }
+        while (SDL_PollEvent(&e)) if(e.type==SDL_QUIT) s.quit=1;
         input_update(&s.input);
 
         if (s.update && !s.update(&s)) s.quit = 1;

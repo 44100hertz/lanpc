@@ -31,9 +31,9 @@ typedef struct {
     enum Draw kind;
     SDL_Point size;
 
-    union draw_kind {
+    union {
         SDL_Color fill;
-    } draw;
+    };
 
     enum Depth depth_mode;
     int depth;
@@ -48,7 +48,7 @@ typedef struct {
         struct drawpos_3d {
             float x, y, z;
         } three;
-    } pos;
+    };
 } Drawn;
 
 typedef struct {
