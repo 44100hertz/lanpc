@@ -6,11 +6,13 @@
 #define PANELH (STAGEH/NUMY)
 
 typedef struct {
+    int draw;
+} Ent;
+
+typedef struct {
     int turf[NUMY];
     int turf_clock;
-    struct Panel {
-        int draw;
-    } panels[NUMY][NUMX];
+    Ent panels[NUMY * NUMX];
 } Battle;
 
 static int* turf(Scene* battle) {

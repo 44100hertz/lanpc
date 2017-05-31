@@ -11,14 +11,16 @@ static int* turf_default(int turf[NUMY]) {
     for(int i=NUMY; i--;) turf[i] = NUMX/2;
     return turf;
 }
-static void turf_color(Scene* s, int turf[NUMY]) {
+static void refresh(Scene* s, int turf[NUMY]) {
     Battle* b = s->data;
     for(int x=NUMX; x--;) {
         for(int y=NUMY; y--;) {
-            int lum = x*11 + y*17 + 128;
-            int gb = lum - 64 * (x >= turf[y]);
-            s->draw.draws[b->panels[y][x].draw].fill =
-                (SDL_Color){lum, gb, gb, 255};
+            if (turf) {
+                int lum = x*11 + y*17 + 128;
+                int gb = lum - 64 * (x >= turf[y]);
+                s->draw.draws[b->panels[y*NUMX + x].draw].fill =
+                    (SDL_Color){lum, gb, gb, 255};
+            };
         }
     }
 }
@@ -30,7 +32,7 @@ void turf_set(Scene* s, int turf[NUMY]) {
     } else {
         turf_default(b->turf);
     }
-    turf_color(s, b->turf);
+    refresh(s, b->turf);
 }
 
 static int battle_update(Scene* s) {
@@ -46,7 +48,7 @@ static int battle_update(Scene* s) {
             int* turf = anim_blink(b->turf_clock, 8) ?
                 b->turf :
                 turf_default((int[NUMY]){0});
-            turf_color(s, turf);
+            refresh(s, turf);
         }
     }
     return 1;
@@ -70,7 +72,7 @@ Scene battle_new() {
     // initialize panels
     for(int x=NUMX; x--;) {
         for(int y=NUMY; y--;) {
-            b->panels[y][x].draw =
+            b->panels[y*NUMX + x].draw =
                 draw_add(&s.draw, (Drawn){.kind = DRAW_RECT,
                             .size = {40,24},
                             .pos_kind = DRAWPOS_3D,
