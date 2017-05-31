@@ -9,7 +9,7 @@ typedef struct {
     int turf[NUMY];
     int turf_clock;
     struct Panel {
-        Drawn* draw;
+        int draw;
     } panels[NUMY][NUMX];
 } Battle;
 

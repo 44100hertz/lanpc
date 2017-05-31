@@ -5,40 +5,58 @@
 #include "input.h"
 #include "scene.h"
 #include "battle.h"
+#include "anim.h"
 
-static void turf_default(int turf[NUMY]) {
+static int* turf_default(int turf[NUMY]) {
     for(int i=NUMY; i--;) turf[i] = NUMX/2;
+    return turf;
 }
-static void turf_color(struct Panel p[NUMY][NUMX], int turf[NUMY]) {
+static void turf_color(Scene* s, int turf[NUMY]) {
+    Battle* b = s->data;
     for(int x=NUMX; x--;) {
         for(int y=NUMY; y--;) {
             int lum = x*11 + y*17 + 128;
             int gb = lum - 64 * (x >= turf[y]);
-            p[y][x].draw->draw.fill = (SDL_Color){lum, gb, gb, 255};
+            s->draw.draws[b->panels[y][x].draw].draw.fill =
+                (SDL_Color){lum, gb, gb, 255};
         }
     }
 }
-void turf_set(Scene* battle, int turf[NUMY]) {
-    Battle* d = battle->data;
+void turf_set(Scene* s, int turf[NUMY]) {
+    Battle* b = s->data;
     if(turf) {
-        memcpy(d->turf, turf, sizeof(turf[0]) * NUMY);
-        d->turf_clock = 100;
+        memcpy(b->turf, turf, sizeof(turf[0]) * NUMY);
+        b->turf_clock = 256;
     } else {
-        turf_default(d->turf);
+        turf_default(b->turf);
     }
-    turf_color(d->panels, d->turf);
+    turf_color(s, b->turf);
 }
 
-static int battle_update(Scene* battle) {
-    Battle* d = battle->data;
+static int battle_update(Scene* s) {
+    Battle* b = s->data;
+    if((s->input.hist.a & 3) == 1) {
+        turf_set(s, (int[3]){1,2,3});
+    }
+    if(b->turf_clock) {
+        if(!--b->turf_clock) {
+            turf_set(s, 0);
+        } else {
+            // display blinkout animation
+            int* turf = anim_blink(b->turf_clock, 8) ?
+                b->turf :
+                turf_default((int[NUMY]){0});
+            turf_color(s, turf);
+        }
+    }
     return 1;
 }
-static void battle_free(Scene* battle) {
-    free(battle->data);
+static void battle_free(Scene* s) {
+    free(s->data);
 }
 
 Scene battle_new() {
-    Scene battle = {
+    Scene s = {
         .draw = {
             .tform = {0, 60, PANELW, PANELH},
             .panels = {NUMX, NUMY},
@@ -47,18 +65,18 @@ Scene battle_new() {
         .free = battle_free,
         .data = malloc(sizeof(Battle)),
     };
-    Battle* d = battle.data;
+    Battle* b = s.data;
 
     // initialize panels
     for(int x=NUMX; x--;) {
         for(int y=NUMY; y--;) {
-            d->panels[y][x].draw =
-                draw_add(&battle.draw, (Drawn){.kind = DRAW_RECT,
-                            .size = {GAMEW/NUMX, PANELH},
+            b->panels[y][x].draw =
+                draw_add(&s.draw, (Drawn){.kind = DRAW_RECT,
+                            .size = {40,24},
                             .pos_kind = DRAWPOS_3D,
                             .pos.three = {x,y,0}});
         }
     }
-    turf_set(&battle, 0);
-    return battle;
+    turf_set(&s, 0);
+    return s;
 }
